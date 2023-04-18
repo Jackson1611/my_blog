@@ -4,10 +4,15 @@ import cors from "cors";
 import "dotenv/config";
 import env from "./utils/validateEnv";
 import blogRouter from "./routes/blog";
+import morgan from "morgan";
+import bodyParser from "body-parser";
 
 const app: Express = express();
 const port = env.PORT;
 app.use(cors());
+app.use(express.json());
+app.use(morgan("dev"));
+app.use(bodyParser.json());
 
 mongoose
   .connect(env.MONGO_CONNECTION_STRING)
