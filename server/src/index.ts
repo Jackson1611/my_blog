@@ -23,7 +23,7 @@ mongoose
     console.log(err);
   });
 
-app.use("/blogs", blogRouter);
+app.use("/api/blogs", blogRouter);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
