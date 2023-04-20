@@ -8,7 +8,7 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 
 const app: Express = express();
-const port = env.PORT;
+const port = env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));

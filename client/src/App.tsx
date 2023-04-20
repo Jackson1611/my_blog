@@ -1,35 +1,67 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Box, Container, Grid, Typography } from "@mui/material";
+import Blog from "./components/Blog";
+import AddBlog from "./components/AddBlog";
+import { useEffect, useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+type BlogData = {
+  _id: string;
+  title: string;
+  author: string;
+  url: string;
+  likes: number;
+};
+
+type ApiData = {
+  blogs: BlogData[];
+};
+
+const App = () => {
+  const [blogs, setBlogs] = useState<BlogData[]>([]);
+
+  useEffect(() => fetchData(), []);
+
+  const fetchData = () => {
+    fetch("http://localhost:3001/api/blogs")
+      .then((response) => response.json())
+      .then((data: ApiData) => setBlogs(data.blogs));
+  };
+
+  const handleDeleteBlog = (blogId: string) => {
+    setBlogs(blogs.filter((blog) => blog._id !== blogId));
+  };
+
+  const saveBlog = (blog: BlogData) => {
+    fetch("http://localhost:3001/api/blogs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(blog),
+    })
+      .then((response) => fetchData())
+      .catch((err) => console.error(err));
+  };
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
-}
+    <Container>
+      <Typography variant="h2">My blog</Typography>
+      <Box sx={{ mt: 4 }}>
+        <AddBlog saveBlog={saveBlog} />
+        <Grid container spacing={2}>
+          {blogs.map((blog) => (
+            <Grid key={blog._id}>
+              <Blog
+                _id={blog._id}
+                title={blog.title}
+                author={blog.author}
+                url={blog.url}
+                likes={blog.likes}
+                onDelete={() => handleDeleteBlog(blog._id)}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    </Container>
+  );
+};
 
-export default App
+export default App;
