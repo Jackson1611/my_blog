@@ -17,10 +17,12 @@ const BlogSchema = new Schema<IBlog>({
   likes: {
     type: Number,
     required: true
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   }
 },
 { timestamps: true });
 
 export default model<IBlog>("Blog", BlogSchema);
-
-

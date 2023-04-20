@@ -17,6 +17,7 @@ const AddBlog = (props: any) => {
   });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
     const { name, value } = event.target;
     setBlog((prevBlog) => ({ ...prevBlog, [name]: value }));
   };
