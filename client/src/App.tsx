@@ -39,7 +39,6 @@ const App = () => {
       .then((response) => fetchData())
       .catch((err) => console.error(err));
   };
-
   return (
     <Container>
       <Typography variant="h2">My blog</Typography>

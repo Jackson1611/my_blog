@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { TextField, Button } from "@mui/material";
 
 interface Blog {
@@ -23,6 +22,7 @@ const AddBlog = (props: any) => {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     props.saveBlog(blog);
     setBlog({ title: "", author: "", url: "", likes: 0 });
   };
