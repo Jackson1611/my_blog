@@ -9,6 +9,7 @@ type BlogData = {
   author: string;
   url: string;
   likes: number;
+  createdAt: string;
 };
 
 type ApiData = {
@@ -53,6 +54,7 @@ const App = () => {
                 author={blog.author}
                 url={blog.url}
                 likes={blog.likes}
+                createdAt={blog.createdAt}
                 onDelete={() => handleDeleteBlog(blog._id)}
               />
             </Grid>

@@ -4,6 +4,7 @@ import Blog from "./../models/blog";
 import mongoose from "mongoose";
 import createHttpError from "http-errors";
 
+
 const getBlogs: RequestHandler = async (
   req: Request, 
   res: Response): 
@@ -82,6 +83,28 @@ const deleteBlog: RequestHandler = async (req: Request, res: Response): Promise<
   }
 };
 
+const updateBlog: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+  const blogId = req.params.id;
+  const updates = req.body;
+  try {
+    if (!mongoose.isValidObjectId(blogId)) {
+      throw createHttpError(400, "Invalid blog ID");
+    }
+
+    const updatedBlog = await Blog.findByIdAndUpdate(blogId, updates, {
+      new: true,
+    });
+
+    if (!updatedBlog) {
+      throw createHttpError(404, "Blog not found");
+    }
+
+    res.status(200).json({ message: "Blog updated successfully", blog: updatedBlog });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 
-export { getBlogs, getBlog , addBlogs, deleteBlog };
+export { getBlogs, getBlog , addBlogs, deleteBlog, updateBlog  };

@@ -6,7 +6,8 @@ import {
   Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import React from "react";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import React, { useState, useEffect } from "react";
 import AddBlog from "../components/AddBlog";
 
 type BlogProps = {
@@ -15,6 +16,7 @@ type BlogProps = {
   author: string;
   url: string;
   likes: number;
+  createdAt: string;
   onDelete: () => void;
 };
 
@@ -24,8 +26,11 @@ const Blog: React.FC<BlogProps> = ({
   author,
   url,
   likes,
+  createdAt,
   onDelete,
 }) => {
+  const [numLikes, setNumLikes] = useState(likes);
+
   const handleDelete = () => {
     if (window.confirm(`Do you really want to delete ${title}?`)) {
       fetch(`http://localhost:3001/api/blogs/${_id}`, {
@@ -33,6 +38,24 @@ const Blog: React.FC<BlogProps> = ({
       }).then(() => {
         onDelete();
       });
+    }
+  };
+
+  const timeDiff = () => {
+    const now = new Date();
+    const createdAtDate = new Date(createdAt);
+    const diff = Math.abs(now.getTime() - createdAtDate.getTime());
+    console.log(diff);
+    const minutes = Math.floor(diff / 1000 / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) {
+      return `${days} ${days === 1 ? "day" : "days"} ago`;
+    } else if (hours > 0) {
+      return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+    } else {
+      return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
     }
   };
 
@@ -50,8 +73,15 @@ const Blog: React.FC<BlogProps> = ({
             </a>
           </Typography>
         </CardContent>
-        <CardActions sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography variant="body2">{likes} likes</Typography>
+        <CardActions
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginLeft: "5px",
+          }}
+        >
+          <Typography variant="body2">{timeDiff()}</Typography>
+
           <IconButton onClick={handleDelete} aria-label="delete">
             <DeleteIcon />
           </IconButton>

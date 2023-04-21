@@ -24,6 +24,14 @@ const AddBlog = (props: any) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (
+      blog.title.trim() === "" ||
+      blog.author.trim() === "" ||
+      blog.url.trim() === ""
+    ) {
+      window.alert("Please fill all fields");
+      return;
+    }
     props.saveBlog(blog);
     setBlog({ title: "", author: "", url: "", likes: 0 });
   };
@@ -43,6 +51,7 @@ const AddBlog = (props: any) => {
         label="Title"
         value={blog.title}
         onChange={handleInputChange}
+        placeholder="Title"
       />
       <TextField
         style={{ marginRight: "8px" }}
@@ -50,6 +59,7 @@ const AddBlog = (props: any) => {
         label="Author"
         value={blog.author}
         onChange={handleInputChange}
+        placeholder="Author"
       />
       <TextField
         style={{ marginRight: "8px" }}
@@ -57,6 +67,7 @@ const AddBlog = (props: any) => {
         label="URL"
         value={blog.url}
         onChange={handleInputChange}
+        placeholder="URL"
       />
       <Button variant="contained" type="submit">
         Add Blog
