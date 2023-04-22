@@ -4,9 +4,12 @@ import cors from "cors";
 import "dotenv/config";
 import env from "./utils/validateEnv";
 import blogRouter from "./routes/blog";
+import userRouter from "./routes/user";
 import morgan from "morgan";
 import bodyParser from "body-parser";
+import createHttpError, { isHttpError } from "http-errors";
 
+// Connect to MongoDB
 const app: Express = express();
 const port = env.PORT || 5000;
 app.use(cors());
@@ -24,7 +27,11 @@ mongoose
   });
 
 app.use("/api/blogs", blogRouter);
+app.use("/api/users", userRouter);
 
+app.use((req, res, next) => {
+  next(createHttpError(404, "Endpoint not found"));
+});
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
